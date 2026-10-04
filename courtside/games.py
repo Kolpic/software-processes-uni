@@ -1,7 +1,7 @@
 """Schedule games and record results and player box scores."""
 from __future__ import annotations
 
-from . import store, teams
+from . import store, teams, players
 
 
 def schedule_game(db: dict, home_id: int, away_id: int, date: str) -> dict:
@@ -37,6 +37,17 @@ def record_score(db: dict, game_id: int, home_score: int, away_score: int) -> di
     game["home_score"] = home_score
     game["away_score"] = away_score
     return game
+
+
+def record_player_stats(db: dict, game_id: int, player_id: int, points: int) -> dict:
+    """Record how many points a player scored in a game."""
+    game = get_game(db, game_id)
+    players.get_player(db, player_id)
+    # one entry per player: replace any previous one
+    game["stats"] = [s for s in game["stats"] if s["player_id"] != player_id]
+    entry = {"player_id": player_id, "points": points}
+    game["stats"].append(entry)
+    return entry
 
 
 def is_finished(game: dict) -> bool:

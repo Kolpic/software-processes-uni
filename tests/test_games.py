@@ -29,3 +29,15 @@ def test_record_score():
     game = games.record_score(db, 1, 88, 77)
     assert games.is_finished(game)
     assert game["home_score"] == 88
+
+
+def test_record_player_stats_replaces():
+    from courtside import players
+    db = _db_two_teams()
+    players.add_player(db, 1, "Player A")   # id 1
+    games.schedule_game(db, 1, 2, "2026-10-10")
+    games.record_player_stats(db, 1, 1, 10)
+    games.record_player_stats(db, 1, 1, 25)  # correction
+    game = games.get_game(db, 1)
+    assert len(game["stats"]) == 1
+    assert game["stats"][0]["points"] == 25
