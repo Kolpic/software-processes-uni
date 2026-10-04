@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import argparse
 
-from . import store, teams, players, games
+from . import store, teams, players, games, standings
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -41,6 +41,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("game_id", type=int)
     p.add_argument("home_score", type=int)
     p.add_argument("away_score", type=int)
+
+    p = sub.add_parser("player-stats", help="Record a player's points in a game")
+    p.add_argument("game_id", type=int)
+    p.add_argument("player_id", type=int)
+    p.add_argument("points", type=int)
+
+    sub.add_parser("leaderboard", help="Show the top scorers")
     return parser
 
 
@@ -73,6 +80,12 @@ def main(argv=None) -> int:
     elif args.command == "score":
         g = games.record_score(db, args.game_id, args.home_score, args.away_score)
         print(f"Game #{g['id']}: {g['home_score']}-{g['away_score']}")
+    elif args.command == "player-stats":
+        s = games.record_player_stats(db, args.game_id, args.player_id, args.points)
+        print(f"Player #{s['player_id']} scored {s['points']}")
+    elif args.command == "leaderboard":
+        for r in standings.leaderboard(db):
+            print(f"{r['name']}: {r['points']} pts")
 
     store.save(db)
     return 0
