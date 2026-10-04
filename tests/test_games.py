@@ -21,3 +21,11 @@ def test_cannot_play_itself():
     db = _db_two_teams()
     with pytest.raises(ValueError):
         games.schedule_game(db, 1, 1, "2026-10-10")
+
+
+def test_record_score():
+    db = _db_two_teams()
+    games.schedule_game(db, 1, 2, "2026-10-10")
+    game = games.record_score(db, 1, 88, 77)
+    assert games.is_finished(game)
+    assert game["home_score"] == 88

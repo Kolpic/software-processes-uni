@@ -36,6 +36,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("home_id", type=int)
     p.add_argument("away_id", type=int)
     p.add_argument("date")
+
+    p = sub.add_parser("score", help="Record a game's final score")
+    p.add_argument("game_id", type=int)
+    p.add_argument("home_score", type=int)
+    p.add_argument("away_score", type=int)
     return parser
 
 
@@ -65,6 +70,9 @@ def main(argv=None) -> int:
     elif args.command == "schedule":
         g = games.schedule_game(db, args.home_id, args.away_id, args.date)
         print(f"Scheduled game #{g['id']} on {g['date']}")
+    elif args.command == "score":
+        g = games.record_score(db, args.game_id, args.home_score, args.away_score)
+        print(f"Game #{g['id']}: {g['home_score']}-{g['away_score']}")
 
     store.save(db)
     return 0
