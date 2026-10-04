@@ -41,3 +41,10 @@ def test_record_player_stats_replaces():
     game = games.get_game(db, 1)
     assert len(game["stats"]) == 1
     assert game["stats"][0]["points"] == 25
+
+
+def test_negative_score_rejected():
+    db = _db_two_teams()
+    games.schedule_game(db, 1, 2, "2026-10-10")
+    with pytest.raises(ValueError):
+        games.record_score(db, 1, -5, 10)

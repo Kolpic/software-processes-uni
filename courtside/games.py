@@ -33,6 +33,8 @@ def get_game(db: dict, game_id: int) -> dict:
 
 def record_score(db: dict, game_id: int, home_score: int, away_score: int) -> dict:
     """Record (or correct) the final score of a game."""
+    if home_score < 0 or away_score < 0:
+        raise ValueError("Scores cannot be negative")
     game = get_game(db, game_id)
     game["home_score"] = home_score
     game["away_score"] = away_score
@@ -41,6 +43,8 @@ def record_score(db: dict, game_id: int, home_score: int, away_score: int) -> di
 
 def record_player_stats(db: dict, game_id: int, player_id: int, points: int) -> dict:
     """Record how many points a player scored in a game."""
+    if points < 0:
+        raise ValueError("Points cannot be negative")
     game = get_game(db, game_id)
     players.get_player(db, player_id)
     # one entry per player: replace any previous one

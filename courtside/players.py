@@ -7,6 +7,9 @@ from . import store, teams
 def add_player(db: dict, team_id: int, name: str, number: int | None = None) -> dict:
     """Add a player to a team and return the player."""
     teams.get_team(db, team_id)  # validates that the team exists
+    name = (name or "").strip()
+    if not name:
+        raise ValueError("Player name cannot be empty")
     player = {
         "id": store.next_id(db["players"]),
         "team_id": team_id,
