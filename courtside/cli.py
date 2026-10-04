@@ -23,6 +23,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("roster", help="Show a team's roster")
     p.add_argument("team_id", type=int)
+
+    p = sub.add_parser("edit-player", help="Edit a player")
+    p.add_argument("player_id", type=int)
+    p.add_argument("--name")
+    p.add_argument("--number", type=int)
+
+    p = sub.add_parser("remove-player", help="Remove a player")
+    p.add_argument("player_id", type=int)
     return parser
 
 
@@ -43,6 +51,12 @@ def main(argv=None) -> int:
         for pl in players.get_roster(db, args.team_id):
             num = f" (#{pl['number']})" if pl["number"] is not None else ""
             print(f"#{pl['id']} {pl['name']}{num}")
+    elif args.command == "edit-player":
+        pl = players.update_player(db, args.player_id, args.name, args.number)
+        print(f"Updated player #{pl['id']}: {pl['name']}")
+    elif args.command == "remove-player":
+        players.remove_player(db, args.player_id)
+        print(f"Removed player #{args.player_id}")
 
     store.save(db)
     return 0

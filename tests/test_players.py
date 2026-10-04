@@ -29,3 +29,12 @@ def test_get_roster():
     players.add_player(db, 1, "Brown", 7)
     roster = players.get_roster(db, 1)
     assert [p["name"] for p in roster] == ["Tatum", "Brown"]
+
+
+def test_update_and_remove_player():
+    db = _db_with_team()
+    players.add_player(db, 1, "Tatum", 0)
+    players.update_player(db, 1, name="Jayson Tatum")
+    assert players.get_player(db, 1)["name"] == "Jayson Tatum"
+    players.remove_player(db, 1)
+    assert players.get_roster(db, 1) == []
