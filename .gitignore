@@ -13,3 +13,5 @@ courtside_data.json
 .DS_Store
 .idea/
 .vscode/
+
+courtside_build.sh
