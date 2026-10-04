@@ -29,3 +29,23 @@ def get_player(db: dict, player_id: int) -> dict:
         if player["id"] == player_id:
             return player
     raise ValueError(f"No player with id {player_id}")
+
+
+def update_player(db: dict, player_id: int, name: str | None = None,
+                  number: int | None = None) -> dict:
+    """Update a player's name and/or shirt number."""
+    player = get_player(db, player_id)
+    if name is not None:
+        name = name.strip()
+        if not name:
+            raise ValueError("Player name cannot be empty")
+        player["name"] = name
+    if number is not None:
+        player["number"] = number
+    return player
+
+
+def remove_player(db: dict, player_id: int) -> None:
+    """Remove a player from the roster."""
+    player = get_player(db, player_id)
+    db["players"].remove(player)
