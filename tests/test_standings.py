@@ -27,3 +27,15 @@ def test_standings_counts_only_finished_games():
     top = table[0]
     assert top["name"] == "Lakers"
     assert top["played"] == 1 and top["wins"] == 1
+
+
+def test_editing_a_score_updates_standings():
+    """Regression test for bug BB-14."""
+    db = store.new_db()
+    teams.create_team(db, "Lakers")   # id 1
+    teams.create_team(db, "Bulls")    # id 2
+    games.schedule_game(db, 1, 2, "2026-10-10")   # game 1
+    games.record_score(db, 1, 80, 70)             # Lakers win
+    assert standings.compute_standings(db)[0]["name"] == "Lakers"
+    games.record_score(db, 1, 70, 80)             # correction: Bulls win
+    assert standings.compute_standings(db)[0]["name"] == "Bulls"
