@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "courtside"
+version = "1.0.0"
+description = "Amateur basketball league manager"
+requires-python = ">=3.9"
+
+[tool.setuptools]
+packages = ["courtside"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
