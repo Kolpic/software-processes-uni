@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import argparse
 
-from . import store, teams, players
+from . import store, teams, players, games
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -31,6 +31,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("remove-player", help="Remove a player")
     p.add_argument("player_id", type=int)
+
+    p = sub.add_parser("schedule", help="Schedule a game")
+    p.add_argument("home_id", type=int)
+    p.add_argument("away_id", type=int)
+    p.add_argument("date")
     return parser
 
 
@@ -57,6 +62,9 @@ def main(argv=None) -> int:
     elif args.command == "remove-player":
         players.remove_player(db, args.player_id)
         print(f"Removed player #{args.player_id}")
+    elif args.command == "schedule":
+        g = games.schedule_game(db, args.home_id, args.away_id, args.date)
+        print(f"Scheduled game #{g['id']} on {g['date']}")
 
     store.save(db)
     return 0
