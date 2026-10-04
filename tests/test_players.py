@@ -38,3 +38,9 @@ def test_update_and_remove_player():
     assert players.get_player(db, 1)["name"] == "Jayson Tatum"
     players.remove_player(db, 1)
     assert players.get_roster(db, 1) == []
+
+
+def test_add_player_empty_name_rejected():
+    db = _db_with_team()
+    with pytest.raises(ValueError):
+        players.add_player(db, 1, "   ")
