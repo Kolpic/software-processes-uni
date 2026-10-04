@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# App data (local JSON store)
+courtside_data.json
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
