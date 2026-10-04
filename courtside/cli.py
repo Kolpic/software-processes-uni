@@ -20,6 +20,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("team_id", type=int)
     p.add_argument("name")
     p.add_argument("--number", type=int)
+
+    p = sub.add_parser("roster", help="Show a team's roster")
+    p.add_argument("team_id", type=int)
     return parser
 
 
@@ -36,6 +39,10 @@ def main(argv=None) -> int:
     elif args.command == "add-player":
         pl = players.add_player(db, args.team_id, args.name, args.number)
         print(f"Added player #{pl['id']}: {pl['name']}")
+    elif args.command == "roster":
+        for pl in players.get_roster(db, args.team_id):
+            num = f" (#{pl['number']})" if pl["number"] is not None else ""
+            print(f"#{pl['id']} {pl['name']}{num}")
 
     store.save(db)
     return 0

@@ -17,6 +17,12 @@ def add_player(db: dict, team_id: int, name: str, number: int | None = None) -> 
     return player
 
 
+def get_roster(db: dict, team_id: int) -> list:
+    """Return all players of a team."""
+    teams.get_team(db, team_id)
+    return [p for p in db["players"] if p["team_id"] == team_id]
+
+
 def get_player(db: dict, player_id: int) -> dict:
     """Return a player by id or raise ValueError."""
     for player in db["players"]:
