@@ -21,3 +21,11 @@ def test_add_player_unknown_team_rejected():
     db = _db_with_team()
     with pytest.raises(ValueError):
         players.add_player(db, 99, "Ghost")
+
+
+def test_get_roster():
+    db = _db_with_team()
+    players.add_player(db, 1, "Tatum", 0)
+    players.add_player(db, 1, "Brown", 7)
+    roster = players.get_roster(db, 1)
+    assert [p["name"] for p in roster] == ["Tatum", "Brown"]
