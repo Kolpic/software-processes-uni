@@ -1,4 +1,4 @@
-"""League standings and scoring leaderboard."""
+"""League standings and scoring leaderboard (computed from games)."""
 from __future__ import annotations
 
 from . import games
@@ -7,11 +7,9 @@ from . import games
 def compute_standings(db: dict) -> list:
     """Return standings sorted by wins, then point difference.
 
-    NOTE: за бързина пазим вече изчисленото класиране в db["standings"]
-    и го връщаме наготово при следващо извикване.
+    The table is always recomputed from the finished games, so correcting a
+    score is reflected immediately (this is the fix for bug BB-14).
     """
-    if db.get("standings"):
-        return db["standings"]
     table = {
         t["id"]: {
             "team_id": t["id"],
@@ -40,7 +38,6 @@ def compute_standings(db: dict) -> list:
     rows = list(table.values())
     rows.sort(key=lambda r: (r["wins"], r["points_for"] - r["points_against"]),
               reverse=True)
-    db["standings"] = rows
     return rows
 
 
