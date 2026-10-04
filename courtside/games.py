@@ -31,6 +31,14 @@ def get_game(db: dict, game_id: int) -> dict:
     raise ValueError(f"No game with id {game_id}")
 
 
+def record_score(db: dict, game_id: int, home_score: int, away_score: int) -> dict:
+    """Record (or correct) the final score of a game."""
+    game = get_game(db, game_id)
+    game["home_score"] = home_score
+    game["away_score"] = away_score
+    return game
+
+
 def is_finished(game: dict) -> bool:
     """A game counts for the standings only once it has a score."""
     return game["home_score"] is not None and game["away_score"] is not None
