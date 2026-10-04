@@ -47,6 +47,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("player_id", type=int)
     p.add_argument("points", type=int)
 
+    sub.add_parser("standings", help="Show the league standings")
     sub.add_parser("leaderboard", help="Show the top scorers")
     return parser
 
@@ -83,6 +84,10 @@ def main(argv=None) -> int:
     elif args.command == "player-stats":
         s = games.record_player_stats(db, args.game_id, args.player_id, args.points)
         print(f"Player #{s['player_id']} scored {s['points']}")
+    elif args.command == "standings":
+        for r in standings.compute_standings(db):
+            diff = r["points_for"] - r["points_against"]
+            print(f"{r['name']}: {r['wins']}W-{r['losses']}L (diff {diff:+d})")
     elif args.command == "leaderboard":
         for r in standings.leaderboard(db):
             print(f"{r['name']}: {r['points']} pts")
